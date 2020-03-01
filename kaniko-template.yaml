@@ -26,7 +26,7 @@ objects:
               "--context=git://github.com/MohammedFadin/tektoncd-nodejs-tutorial.git",
               "--destination=docker-registry.default.svc:5000/devops/demo:latest",
               "--skip-tls-verify=true",
-              "--cache=false",
+              "--cache=true",
               "--insecure=true",
             ]
           imagePullPolicy: Always
