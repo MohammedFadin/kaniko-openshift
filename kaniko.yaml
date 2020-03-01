@@ -25,10 +25,10 @@ spec:
         ]
       imagePullPolicy: Always
       name: kaniko
-      restartPolicy: Never
       volumeMounts:
         - mountPath: /kaniko/.docker/
           name: kaniko-secret
+  restartPolicy: Never          
   volumes:
     - name: kaniko-secret
       secret:
