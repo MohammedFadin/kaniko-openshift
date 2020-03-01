@@ -2,36 +2,42 @@
 ######### Kaniko Pod to build images within Openshift Platform
 ###
 apiVersion: v1
-kind: Pod
+kind: Template
 metadata:
-  generateName: kaniko-
-  labels:
-    name: kaniko
-    type: image-builder
-    tier: devops
-spec:
-  containers:
-    - image: gcr.io/kaniko-project/executor:debug
-      #   env:
-      #     - name: DOCKER_CONFIG
-      #       value: "/kaniko/.docker/"
-      args: [
-          #   "--dockerfile=https://github.com/MohammedFadin/tektoncd-nodejs-tutorial/blob/master/Dockerfile",
-          "--context=git://github.com/MohammedFadin/tektoncd-nodejs-tutorial.git",
-          "--destination=docker-registry.default.svc:5000/devops/demo:latest",
-          "--skip-tls-verify=true",
-          "--cache=false",
-          "--insecure=true",
-        ]
-      imagePullPolicy: Always
-      name: kaniko
-      volumeMounts:
-        - mountPath: /kaniko/.docker/
-          name: kaniko-secret
-  volumes:
-    - name: kaniko-secret
-      secret:
-        secretName: internal-registry2
-        items:
-          - key: .dockerconfigjson
-            path: config.json
+  name: kaniko-template
+objects:
+  - apiVersion: v1
+    kind: Pod
+    metadata:
+      generateName: kaniko-
+      labels:
+        name: kaniko
+        type: image-builder
+        tier: devops
+        build: ${BUILD_NAME}
+    spec:
+      containers:
+        - image: gcr.io/kaniko-project/executor:debug
+          #   env:
+          #     - name: DOCKER_CONFIG
+          #       value: "/kaniko/.docker/"
+          args: [
+              #   "--dockerfile=https://github.com/MohammedFadin/tektoncd-nodejs-tutorial/blob/master/Dockerfile",
+              "--context=git://github.com/MohammedFadin/tektoncd-nodejs-tutorial.git",
+              "--destination=docker-registry.default.svc:5000/devops/demo:latest",
+              "--skip-tls-verify=true",
+              "--cache=false",
+              "--insecure=true",
+            ]
+          imagePullPolicy: Always
+          name: kaniko
+          volumeMounts:
+            - mountPath: /kaniko/.docker/
+              name: kaniko-secret
+      volumes:
+        - name: kaniko-secret
+          secret:
+            secretName: internal-registry2
+            items:
+              - key: .dockerconfigjson
+                path: config.json
