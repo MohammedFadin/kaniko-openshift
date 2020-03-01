@@ -14,7 +14,7 @@ objects:
         name: kaniko
         type: image-builder
         tier: devops
-        build: ${BUILD_NAME}
+        pipe: ${BUILD_NAME}
     spec:
       containers:
         - image: gcr.io/kaniko-project/executor:debug
@@ -41,3 +41,7 @@ objects:
             items:
               - key: .dockerconfigjson
                 path: config.json
+parameters:
+  - name: BUILD_NAME
+    required: true
+    value: ""
